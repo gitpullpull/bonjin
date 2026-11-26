@@ -1,5 +1,5 @@
 /* THE BONJIN — main.js
-   content.js の SITE を描画し、仕掛けを駆動する。
+   content.js の SITE を描画する。2026-11-25 リデザイン（宮崎・セピア・シンプル）。
    JSが失敗しても本文が読めるよう、初期状態はCSSで隠さない（progressive enhancement）。 */
 (function () {
   "use strict";
@@ -11,238 +11,164 @@
       .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
       .replace(/"/g, "&quot;");
   };
-  var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var ext = function (u) { return /^https?:/.test(u); };
+  var aTag = function (url, text) {
+    return '<a href="' + esc(url) + '"' + (ext(url) ? ' target="_blank" rel="noopener"' : "") + ">" + text + "</a>";
+  };
+  var paras = function (list) { return list.map(function (p) { return "<p>" + esc(p) + "</p>"; }).join(""); };
+  var lines = function (list) { return list.map(esc).join("<br>"); };
+  var set = function (sel, html) { var el = $(sel); if (el) el.innerHTML = html; };
 
   /* ---------- meta ---------- */
   document.title = S.meta.title;
-  $("#vol").textContent = S.meta.vol;
-  $("#f-vol").textContent = S.meta.vol + " / UPDATED " + S.meta.updated;
-  $("#f-colophon").textContent = S.footer.colophon;
+  set("#f-vol", esc(S.meta.vol + " / UPDATED " + S.meta.updated));
+  set("#f-colophon", esc(S.footer.colophon));
 
-  /* ---------- hero title split (v2: title lives in the 九十度 stage; guard) ---------- */
-  var title = $("#hero-title");
-  if (title) title.innerHTML = '<span class="ch">凡</span><span class="ch jin">人</span>';
-
-  /* ---------- rotating word ---------- */
-  var rot = $("#hero-rot");
-  rot.innerHTML = esc(S.rotating.before) +
-    '<span class="slot" id="rot-slot">' + esc(S.rotating.words[0]) + "</span>" +
-    esc(S.rotating.after);
-  var slot = $("#rot-slot"), wi = 0;
-  if (!reduceMotion) {
-    setInterval(function () {
-      wi = (wi + 1) % S.rotating.words.length;
-      slot.style.opacity = "0";
-      setTimeout(function () {
-        slot.textContent = S.rotating.words[wi];
-        slot.style.opacity = "1";
-      }, 220);
-    }, 2600);
-    slot.style.transition = "opacity .22s";
+  /* ---------- hero ---------- */
+  if (S.hero) {
+    set("#hero-place", esc(S.hero.place));
+    set("#hero-copy", S.hero.copy.map(esc).join(""));
   }
 
-  /* ---------- stats ---------- */
-  $("#stats").innerHTML = S.stats.map(function (st) {
-    return '<div class="stat"><div class="v num">' + esc(st.value) +
+  /* ---------- about (宮崎で) ---------- */
+  if (S.intro) {
+    set("#intro-label", esc(S.intro.label));
+    set("#intro-heading", lines(S.intro.heading));
+    set("#intro-body", paras(S.intro.body));
+  }
+  set("#stats", S.stats.map(function (st) {
+    return '<div class="stat"><div class="v">' + esc(st.value) +
       (st.unit ? '<span class="u">' + esc(st.unit) + "</span>" : "") +
       '</div><div class="l">' + esc(st.label) + "</div></div>";
-  }).join("");
+  }).join(""));
 
-  /* ---------- marquee (2 sets, aria-hidden duplicate) ---------- */
-  var items = S.marquee.map(function (m) { return "<span>" + esc(m) + "　／</span>"; }).join("");
-  $("#marquee-track").innerHTML = "<div>" + items + '</div><div aria-hidden="true">' + items + "</div>";
+  /* ---------- services (事業) ---------- */
+  var SV = S.services;
+  if (SV) {
+    set("#svc-list", SV.items.map(function (it) {
+      var works = it.works.length ? it.works.map(function (w) {
+        var name = w[1] ? aTag(w[1], esc(w[0])) : esc(w[0]);
+        return "<li>" + name + (w[2] ? '<span class="w-note">' + esc(w[2]) + "</span>" : "") + "</li>";
+      }).join("") : '<li class="w-none">これから。最初の実績は、ここに載ります。</li>';
+      var list = function (title, items, cls) {
+        return '<div><h4>' + title + '</h4><ul class="' + cls + '">' +
+          items.map(function (x) { return "<li>" + esc(x) + "</li>"; }).join("") + "</ul></div>";
+      };
+      return '<article class="svc" id="svc-' + esc(it.no) + '">' +
+        '<header class="svc-head">' +
+        '<span class="svc-no en">' + esc(it.no) + "</span>" +
+        '<div><p class="svc-en en">' + esc(it.en) + "</p>" +
+        '<h3 class="svc-name">' + esc(it.name) + "</h3></div>" +
+        '<span class="chip' + (it.status === "受付中" ? "" : " ghost") + '">' + esc(it.status) + "</span>" +
+        "</header>" +
+        '<p class="svc-body">' + esc(it.body) + "</p>" +
+        (it.lp ? '<p class="svc-lp"><a href="' + esc(it.lp) + '">' + esc(it.lpLabel || "専用ページを見る →") + "</a>" +
+          (it.student ? '<a href="' + esc(it.student) + '">学生はこちら（学割） →</a>' : "") + "</p>" : "") +
+        '<details class="svc-more"><summary>くわしく</summary><div class="svc-cols">' +
+        (it.points ? list("できること", it.points, "svc-pt") : "") +
+        '<div><h4>実績</h4><ul class="svc-works">' + works + "</ul></div>" +
+        "</div></details></article>";
+    }).join(""));
+    set("#svc-flow", SV.flow.map(function (f, i) {
+      return '<li><span class="en">0' + (i + 1) + "</span>" + esc(f) + "</li>";
+    }).join(""));
+    set("#svc-contact", "<p>" + esc(SV.contact.text) + '</p><div class="contact-links">' +
+      SV.contact.links.map(function (l) {
+        return '<a class="btn" href="' + esc(l[1]) + '">' + esc(l[0]) + "　" + esc(l[2]) + "</a>";
+      }).join("") + "</div>");
+  }
 
-  /* ---------- about the members ---------- */
-  $("#about-body").innerHTML = S.about.body.map(function (p) {
-    return "<p>" + esc(p) + "</p>";
-  }).join("");
+  /* ---------- message ---------- */
+  if (S.message) {
+    set("#msg-label", esc(S.message.label));
+    set("#msg-heading", esc(S.message.heading));
+    set("#msg-body", paras(S.message.body));
+  }
 
-  /* ---------- members ledger ---------- */
+  /* ---------- members ---------- */
+  set("#about-body", paras(S.about.body));
   var ledger = $("#ledger");
-  ledger.innerHTML = S.members.map(function (m, i) {
-    var detail = "";
-    if (m.bio) {
-      detail = '<div class="row-detail">' +
-        "<p>" + esc(m.bio) + "</p>" +
-        (m.facts.length ? '<ul class="facts">' + m.facts.map(function (f) {
-          return "<li><span class=\"k\">" + esc(f[0]) + "</span><span>" + esc(f[1]) + "</span></li>";
-        }).join("") + "</ul>" : "") +
-        (m.links.length ? '<div class="links">' + m.links.map(function (l) {
-          return '<a href="' + esc(l[1]) + '" target="_blank" rel="noopener" data-cursor="開く">' + esc(l[0]) + "：" + esc(l[2]) + "</a>";
-        }).join("") + "</div>" : "") +
-        (m.page ? '<div class="links"><a href="' + esc(m.page) + '" data-cursor="開く">紹介ページ →</a></div>' : "") +
-        "</div>";
-    } else {
-      detail = '<div class="row-detail"><p class="mono" style="font-size:12px;letter-spacing:.15em">COMING SOON</p></div>';
-    }
-    return '<div class="row' + (i === 0 ? " open" : "") + '">' +
-      '<button class="row-main" type="button" data-cursor="開閉">' +
-      '<span class="row-no">' + esc(m.no) + "</span>" +
-      '<span class="row-name palt">' + esc(m.name) +
-      '<span class="reading">' + esc([m.reading, m.tags.join(" / ")].filter(Boolean).join(" — ")) + "</span></span>" +
-      '<span class="row-role">' + esc(m.role) + '<br><span class="plus">' + (i === 0 ? "−" : "+") + "</span></span>" +
-      "</button>" + detail + "</div>";
-  }).join("");
-
-  ledger.addEventListener("click", function (e) {
-    var btn = e.target.closest(".row-main");
-    if (!btn) return;
-    var row = btn.closest(".row");
-    var wasOpen = row.classList.contains("open");
-    ledger.querySelectorAll(".row").forEach(function (r) {
-      r.classList.remove("open");
-      var p = r.querySelector(".plus"); if (p) p.textContent = "+";
+  if (ledger) {
+    ledger.innerHTML = S.members.map(function (m, i) {
+      var detail;
+      if (m.bio) {
+        detail = '<div class="row-detail"><p>' + esc(m.bio) + "</p>" +
+          (m.facts.length ? '<ul class="facts">' + m.facts.map(function (f) {
+            return '<li><span class="k">' + esc(f[0]) + "</span><span>" + esc(f[1]) + "</span></li>";
+          }).join("") + "</ul>" : "") +
+          (m.links.length ? '<div class="links">' + m.links.map(function (l) {
+            return aTag(l[1], esc(l[0]) + "：" + esc(l[2]));
+          }).join("") + "</div>" : "") +
+          (m.page ? '<p class="more"><a href="' + esc(m.page) + '">紹介ページ →</a></p>' : "") +
+          "</div>";
+      } else {
+        detail = '<div class="row-detail"><p class="soon en">Coming soon</p></div>';
+      }
+      return '<div class="row">' +
+        '<button class="row-main" type="button" aria-expanded="false">' +
+        '<span class="row-no en">' + esc(m.no) + "</span>" +
+        '<span class="row-name">' + esc(m.name) +
+        '<span class="reading">' + esc([m.reading, m.tags.join(" / ")].filter(Boolean).join(" — ")) + "</span></span>" +
+        '<span class="row-role">' + esc(m.role) + "</span>" +
+        '<span class="plus" aria-hidden="true"></span>' +
+        "</button>" + detail + "</div>";
+    }).join("");
+    ledger.addEventListener("click", function (e) {
+      var btn = e.target.closest(".row-main");
+      if (!btn) return;
+      var row = btn.closest(".row");
+      var wasOpen = row.classList.contains("open");
+      ledger.querySelectorAll(".row").forEach(function (r) {
+        r.classList.remove("open");
+        r.querySelector(".row-main").setAttribute("aria-expanded", "false");
+      });
+      if (!wasOpen) { row.classList.add("open"); btn.setAttribute("aria-expanded", "true"); }
     });
-    if (!wasOpen) {
-      row.classList.add("open");
-      var p = row.querySelector(".plus"); if (p) p.textContent = "−";
-    }
-  });
+  }
 
   /* ---------- products ---------- */
-  $("#products-list").innerHTML = S.products.map(function (p) {
-    var titleHtml = p.url
-      ? '<a href="' + esc(p.url) + '" target="_blank" rel="noopener" data-cursor="開く">' + esc(p.title) + "</a>"
-      : esc(p.title);
-    var chipCls = (p.status === "公開中") ? "chip" : "chip ghost";
-    return '<div class="p-row"><span class="' + chipCls + '">' + esc(p.status) + "</span>" +
-      '<span class="p-title">' + titleHtml + '</span>' +
-      '<span class="p-meta">' + esc(p.meta) + "</span>" +
-      '<span class="p-hook" style="grid-column:2">' + esc(p.hook) + "</span></div>";
-  }).join("");
+  set("#products-list", S.products.map(function (p) {
+    var title = p.url ? aTag(p.url, esc(p.title)) : esc(p.title);
+    return '<div class="p-row"><span class="chip' + (p.status === "公開中" ? "" : " ghost") + '">' + esc(p.status) + "</span>" +
+      '<div><p class="p-title">' + title + "</p>" +
+      '<p class="p-meta">' + esc(p.meta) + "</p></div></div>";
+  }).join(""));
+
+  /* ---------- company ---------- */
+  if (S.company) {
+    set("#co-label", esc(S.company.label));
+    set("#co-heading", esc(S.company.heading));
+    set("#co-table", S.company.rows.map(function (r) {
+      return "<div><dt>" + esc(r[0]) + "</dt><dd>" + esc(r[1]) + "</dd></div>";
+    }).join(""));
+  }
 
   /* ---------- footer ---------- */
-  $("#f-credits").innerHTML = S.footer.credits.map(function (c) {
-    return "<li>" + esc(c[0]) + "： " + esc(c[1]) + "</li>";
-  }).join("");
-  $("#f-links").innerHTML = S.footer.links.map(function (l) {
-    return '<li><a href="' + esc(l[1]) + '" target="_blank" rel="noopener">' + esc(l[0]) + "</a></li>";
-  }).join("");
+  set("#f-credits", S.footer.credits.map(function (c) {
+    return "<li>" + esc(c[0]) + "：" + esc(c[1]) + "</li>";
+  }).join(""));
+  set("#f-links", S.footer.links.map(function (l) {
+    return "<li>" + aTag(l[1], esc(l[0])) + "</li>";
+  }).join(""));
 
-  /* ---------- custom cursor (difference, fine pointers only) ---------- */
-  if (window.matchMedia("(hover: hover) and (pointer: fine)").matches && !reduceMotion) {
-    document.body.classList.add("cursor-on");
-    var dot = document.querySelector(".cursor-dot");
-    var ring = document.querySelector(".cursor-ring");
-    var label = ring.querySelector(".cursor-label");
-    var mx = -100, my = -100, rx = -100, ry = -100;
-    document.addEventListener("mousemove", function (e) { mx = e.clientX; my = e.clientY; });
-    (function loop() {
-      rx += (mx - rx) * 0.16; ry += (my - ry) * 0.16;
-      dot.style.transform = "translate(" + (mx - 4) + "px," + (my - 4) + "px)";
-      var half = ring.classList.contains("is-active") ? 36 : 20;
-      ring.style.transform = "translate(" + (rx - half) + "px," + (ry - half) + "px)";
-      requestAnimationFrame(loop);
-    })();
-    document.addEventListener("mouseover", function (e) {
-      var t = e.target.closest("[data-cursor],a,button,.row-main");
-      if (t) {
-        ring.classList.add("is-active");
-        label.textContent = t.getAttribute("data-cursor") || "";
-      } else {
-        ring.classList.remove("is-active");
-        label.textContent = "";
-      }
-    });
+  /* ---------- header shadow on scroll ---------- */
+  var head = $(".site-head");
+  if (head) {
+    var onScroll = function () { head.classList.toggle("scrolled", window.scrollY > 40); };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
   }
 
-  /* ---------- ⌘K palette (paco/cmdk steal, hand-rolled) ---------- */
-  var entries = [];
-  S.members.forEach(function (m) {
-    if (!m.role) return;
-    entries.push({ label: m.name + "（" + m.role + "）", kind: "MEMBER", target: "#members" });
-  });
-  S.products.forEach(function (p) {
-    entries.push({ label: p.title, kind: p.status, target: "#products", url: p.url });
-  });
-  var backdrop = $("#palette-backdrop"), input = $("#palette-input"), list = $("#palette-list");
-  var sel = 0, current = entries.slice();
-  function renderPalette() {
-    list.innerHTML = current.map(function (e, i) {
-      return '<li data-i="' + i + '"' + (i === sel ? ' class="sel"' : "") + "><span>" +
-        esc(e.label) + '</span><span class="kind">' + esc(e.kind) + "</span></li>";
-    }).join("") || '<li><span>見つかりません</span><span class="kind">—</span></li>';
-  }
-  function openPalette() {
-    backdrop.classList.add("open");
-    input.value = ""; current = entries.slice(); sel = 0;
-    renderPalette();
-    setTimeout(function () { input.focus(); }, 30);
-  }
-  function closePalette() { backdrop.classList.remove("open"); }
-  function choose(e) {
-    if (!e) return;
-    closePalette();
-    if (e.url) { window.open(e.url, "_blank", "noopener"); return; }
-    var t = document.querySelector(e.target);
-    if (t) t.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth" });
-  }
-  $("#cmdk-open").addEventListener("click", openPalette);
-  document.addEventListener("keydown", function (e) {
-    if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") { e.preventDefault(); openPalette(); }
-    if (!backdrop.classList.contains("open")) return;
-    if (e.key === "Escape") closePalette();
-    if (e.key === "ArrowDown") { e.preventDefault(); sel = Math.min(current.length - 1, sel + 1); renderPalette(); }
-    if (e.key === "ArrowUp") { e.preventDefault(); sel = Math.max(0, sel - 1); renderPalette(); }
-    if (e.key === "Enter") choose(current[sel]);
-  });
-  input.addEventListener("input", function () {
-    var q = input.value.trim().toLowerCase();
-    current = entries.filter(function (e) { return e.label.toLowerCase().indexOf(q) >= 0; });
-    sel = 0; renderPalette();
-  });
-  list.addEventListener("click", function (e) {
-    var li = e.target.closest("li[data-i]");
-    if (li) choose(current[Number(li.getAttribute("data-i"))]);
-  });
-  backdrop.addEventListener("click", function (e) { if (e.target === backdrop) closePalette(); });
-
-  /* ---------- GSAP: mask-rise headings + hero (SplitText-free, hand split) ---------- */
-  if (window.gsap && !reduceMotion) {
-    gsap.registerPlugin(ScrollTrigger);
-    // hero chars rise (run immediately; fonts.ready gating left headless/slow
-    // environments stuck at the from-state, so only refresh triggers later)
-    gsap.from(".hero-rot, .hero-lead, header .hero-actions", {
-      y: 26, opacity: 0, duration: 0.9, ease: "power3.out", stagger: 0.09, delay: 0.45,
-    });
-    if (document.fonts && document.fonts.ready) {
-      document.fonts.ready.then(function () { ScrollTrigger.refresh(); });
-    }
-  }
-
-  /* ---------- reveal: headings & manifesto (IntersectionObserver, robust) ---------- */
-  if ("IntersectionObserver" in window && !reduceMotion) {
-    var targets = document.querySelectorAll(".sec-head h2");
+  /* ---------- quiet fade-in ---------- */
+  var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (!reduce && "IntersectionObserver" in window) {
+    var targets = document.querySelectorAll(".sec-title, .sec-body, .svc, .dark .wrap, #contact .wrap");
     targets.forEach(function (el) { el.classList.add("rv"); });
     var io = new IntersectionObserver(function (es) {
       es.forEach(function (en) {
         if (en.isIntersecting) { en.target.classList.add("in"); io.unobserve(en.target); }
       });
-    }, { threshold: 0.2 });
+    }, { threshold: 0.12 });
     targets.forEach(function (el) { io.observe(el); });
-    // safety: never leave content hidden
-    setTimeout(function () {
-      targets.forEach(function (el) { el.classList.add("in"); });
-    }, 4000);
   }
-})();
-
-
-/* ---------- background: the page's scroll turns the ink ---------- */
-(function () {
-  var bgFrame = document.getElementById("bg-frame");
-  if (!bgFrame) return;
-  var ticking = false;
-  function sendScroll() {
-    ticking = false;
-    var max = document.documentElement.scrollHeight - window.innerHeight;
-    var p = max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0;
-    try { bgFrame.contentWindow.postMessage({ type: "bonjin-scroll", p: p }, "*"); } catch (e) {}
-  }
-  window.addEventListener("scroll", function () {
-    if (!ticking) { ticking = true; requestAnimationFrame(sendScroll); }
-  }, { passive: true });
-  window.addEventListener("resize", sendScroll);
-  bgFrame.addEventListener("load", sendScroll);
-  sendScroll();
 })();

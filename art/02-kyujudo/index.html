@@ -51,28 +51,47 @@
 (() => {
 'use strict';
 /* 九十度 — one body of ink, hanging in space.
-   Seen from the front it reads 凡人. Seen from the side, the very same ink reads 途中.
+   Seen from the front it reads 凡人. Seen from the side, the very same ink reads THE Bonjin.
    Everything between the two is neither, and is most of what there is. */
 const canvas = document.getElementById('c');
 const gl = canvas.getContext('webgl2', { alpha:false, antialias:false, depth:false, stencil:false, powerPreference:'high-performance' });
 if (!gl || !gl.getExtension('EXT_color_buffer_float')) { document.getElementById('nogl').style.display = 'flex'; return; }
 gl.getExtension('OES_texture_float_linear');
 
-const WORD_A = '凡人', WORD_B = '途中';
-const SAY = ['人は結果ではなく、<em>途中</em>に救われる。', 'だから、<em>途中</em>を消さない社会を作る。'];
+const WORD_A = '凡人', WORD_B = 'THE Bonjin';
+// the side reading is set in lines, packed tight so no row of 凡人 goes without ink
+const B_LINES = stacked => stacked ? ['THE', 'BON', 'JIN'] : ['THE', 'Bonjin'];
+const SAY = ['特別な人間は、いない。', 'いるのは、作り続ける<em>凡人</em>だけ。'];
+// ?tone=sepia — the page around it is sepia paper
+const SEPIA = new URLSearchParams(location.search).get('tone') === 'sepia';
+if(SEPIA){ const r = document.documentElement.style; r.setProperty('--paper', '#F3ECDF'); r.setProperty('--sumi', '#3A2E24'); r.setProperty('--dai', '#C0561E'); }
 const FONT = '"Shippori Mincho B1","Noto Serif CJK JP","Noto Serif JP",serif';
 const N_MAX = 720000;
 
 /* ───────────────────────── the body: one cloud, two readings ───────────────────────── */
 // rasterise a word and return, per world-row, the ink spans (in units of character height, centred)
-function rasterWord(word, stacked, ROWS){
-  const S = 420, chars = [...word], adv = 1.1;
-  const cw = stacked ? S*1.4 : S*(adv*chars.length + .4), ch = stacked ? S*(adv*chars.length + .4) : S*1.4;
+function rasterWord(word, stacked, ROWS, lines){
+  // stacked: 凡 and 人 sit close enough that every row holds ink, so no band is lost from the side reading
+  const S = 420, chars = [...word], adv = stacked ? .84 : 1.1;
+  let cw = stacked ? S*1.4 : S*(adv*chars.length + .4), ch = stacked ? S*(adv*chars.length + .4) : S*1.4;
+  let lay = null;
+  if(lines){ // Latin, set line by line: each line's cap top meets the line above, a hair of overlap
+    const m = document.createElement('canvas').getContext('2d'); m.font = `800 ${S}px ${FONT}`;
+    lay = lines.map(t => { const k = m.measureText(t); return { t, w:k.width, up:k.actualBoundingBoxAscent, dn:k.actualBoundingBoxDescent }; });
+    cw = Math.max(...lay.map(l => l.w)) + S*.6; ch = lay.reduce((a,l) => a + l.up + l.dn, 0) + S*.6; }
   const cv = document.createElement('canvas'); cv.width = Math.round(cw); cv.height = Math.round(ch);
   const g = cv.getContext('2d', { willReadFrequently:true });
   g.fillStyle = '#000'; g.fillRect(0,0,cv.width,cv.height); g.fillStyle = '#fff'; g.textAlign = 'center'; g.textBaseline = 'middle';
   g.font = `800 ${S}px ${FONT}`;
-  chars.forEach((c,i) => { const k = i-(chars.length-1)/2;
+  let dropX = null;
+  if(lay){ g.textBaseline = 'alphabetic'; let y = S*.3;
+    lay.forEach((l, i) => { y += l.up - (i ? S*.03 : 0); g.fillText(l.t, cv.width/2, y);
+      // the orange drop lands on the dot of the i, when there is one
+      const ii = l.t.indexOf('i'); if(ii >= 0 && dropX === null){ g.textAlign = 'left';
+        const x0 = cv.width/2 - l.w/2, pre = g.measureText(l.t.slice(0, ii)).width, wi = g.measureText('i').width; dropX = x0 + pre + wi/2; g.textAlign = 'center'; }
+      y += l.dn; });
+  }
+  else chars.forEach((c,i) => { const k = i-(chars.length-1)/2;
     if(stacked) g.fillText(c, cv.width/2, cv.height/2 + k*S*adv); else g.fillText(c, cv.width/2 + k*S*adv, cv.height/2); });
   const w = cv.width, h = cv.height, d = g.getImageData(0,0,w,h).data;
   const m = new Uint8Array(w*h); let r0=h, r1=0, c0=w, c1=0;
@@ -90,7 +109,7 @@ function rasterWord(word, stacked, ROWS){
     for(let x=c0;x<=c1;x++){ const on = x<c1 && m[y*w+x];
       if(on && s<0) s = x; else if(!on && s>=0){ spans.push({ a:(s-mid)/H, b:(x-mid)/H, lab:lab[y*w+s] }); len += (x-s)/H; s = -1; } }
     rows.push({ spans, len }); }
-  const lastC = stacked ? 0 : (cv.width/2 + (chars.length-1)/2*S*adv - mid)/H;
+  const lastC = dropX !== null ? (dropX - mid)/H : stacked ? 0 : (cv.width/2 + (chars.length-1)/2*S*adv - mid)/H;
   return { rows, comps, half:(c1-c0)/2/H, lastC };
 }
 function inv(row, u){ let t = u*row.len; for(const s of row.spans){ const l = s.b-s.a; if(t <= l) return [s.a+t, s]; t -= l; } const s = row.spans[row.spans.length-1]; return [s.b, s]; }
@@ -98,12 +117,12 @@ function inv(row, u){ let t = u*row.len; for(const s of row.spans){ const l = s.
 let body = null;   // { n, half, tall, vao }
 function buildBody(stacked){
   const ROWS = stacked ? 1100 : 560;
-  const A = rasterWord(WORD_A, stacked, ROWS), B = rasterWord(WORD_B, stacked, ROWS);
+  const A = rasterWord(WORD_A, stacked, ROWS), B = rasterWord(WORD_B, stacked, ROWS, B_LINES(stacked));
   // the dot of 凡: the smallest real island of ink in the first word
   let dot = 0, best = 1e9; const minA = 420*420*.002;
   A.comps.forEach((c,i) => { if(i && c.area > minA && c.area < best){ best = c.area; dot = i; } });
   if(A.comps.length < 3) dot = 0;
-  // where the orange lives when read from the side: the spine of 中
+  // where the orange lives when read from the side: the i of Bonjin
   const zc = B.lastC;
   const dotY = { mid:0, half:1 }; if(dot){ let j0 = ROWS, j1 = 0; for(let j=0;j<ROWS;j++) if(A.rows[j].spans.some(s => s.lab === dot)){ j0 = Math.min(j0,j); j1 = Math.max(j1,j); }
     dotY.mid = .5 - (j0+j1+1)/2/ROWS; dotY.half = (j1-j0+1)/2/ROWS; }
@@ -188,7 +207,7 @@ in vec2 p; out vec2 vUv; void main(){ vUv = p*.5+.5; gl_Position = vec4(p,0.,1.)
 const FS_SHOW = `#version 300 es
 precision highp float; precision highp sampler2D; in vec2 vUv; out vec4 o;
 uniform sampler2D uD; uniform float aspect;
-const vec3 PAPER = vec3(1., .99608, .98431), SUMI = vec3(.12549,.08235,.08235), DAI = vec3(1.,.30980,0.);
+const vec3 PAPER = vec3(${SEPIA ? '.95294, .92549, .87451' : '1., .99608, .98431'}), SUMI = vec3(${SEPIA ? '.22745,.18039,.14118' : '.12549,.08235,.08235'}), DAI = vec3(${SEPIA ? '.75294,.33725,.11765' : '1.,.30980,0.'});
 void main(){
   vec4 d = texture(uD, vUv);
   vec2 so = vec2(.008/aspect, -.013);
@@ -283,7 +302,7 @@ function startExcursion(dir){
   hand.yaw = 0; hand.pitch = 0; hand.vy = 0; hand.vp = 0;
 }
 /* ── background mode (?bg): the page's scroll turns the body —
-      two full swings across the page, out to 途中 and back to 凡人. ── */
+      two full swings across the page, out to THE Bonjin and back to 凡人. ── */
 const BG = new URLSearchParams(location.search).has('bg');
 let scrollP = 0, scrollYaw = -.72;
 if(BG){ document.body.classList.add('bg');
@@ -445,7 +464,7 @@ window.__art = { get T(){return T;}, set T(v){T=v; prevPh=-9;}, strike, hand, ge
 
 const boot = () => { resize(); document.body.classList.add('on'); requestAnimationFrame(frame); };
 const fontReady = document.fonts && document.fonts.load ? Promise.race([
-  document.fonts.load(`800 120px "Shippori Mincho B1"`, WORD_A+WORD_B), new Promise(r => setTimeout(r, 2500)) ]) : Promise.resolve();
+  document.fonts.load(`800 120px "Shippori Mincho B1"`, WORD_A+WORD_B+'BONJIN'), new Promise(r => setTimeout(r, 2500)) ]) : Promise.resolve();
 fontReady.then(boot, boot);
 })();
 </script>

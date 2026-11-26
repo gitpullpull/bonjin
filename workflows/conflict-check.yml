@@ -1,0 +1,105 @@
+name: conflict-check
+
+# コンフリクト検知:
+# - PR が開かれた/更新されたら、その PR を即チェック (pull_request_target なので
+#   フォークからの PR でも書き込み権限つきで動く。PR のコードは一切 checkout しない)
+# - main に push されたら、全 open PR を再チェック (マージで他 PR が dirty になるケース)
+# コンフリクトしたら `conflict` ラベル + マーカー付きコメント (更新式、重複投稿しない)。
+# 解消したらラベルとコメントを自動で消す。
+
+on:
+  pull_request_target:
+    types: [opened, synchronize, reopened]
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+
+concurrency:
+  group: conflict-check
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ensure conflict label exists
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+        run: |
+          gh label create conflict --repo "$REPO" \
+            --color "B60205" \
+            --description "main とコンフリクト中" 2>/dev/null || true
+
+      - name: Check the PR that triggered this run
+        if: github.event_name == 'pull_request_target'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          PR: ${{ github.event.pull_request.number }}
+        run: |
+          set -euo pipefail
+          mergeable=""
+          for i in 1 2 3 4 5 6; do
+            mergeable=$(gh api "repos/$REPO/pulls/$PR" --jq '.mergeable')
+            [ "$mergeable" != "null" ] && break
+            sleep 5
+          done
+          marker="<!-- conflict-check -->"
+          existing=$(gh api "repos/$REPO/issues/$PR/comments" --paginate \
+            --jq "[.[] | select(.user.login==\"github-actions[bot]\" and (.body | contains(\"$marker\")))] | .[0].id // empty")
+          if [ "$mergeable" = "false" ]; then
+            gh pr edit "$PR" --repo "$REPO" --add-label conflict || true
+            body="$marker
+          ⚠️ **コンフリクト検知**: このPRは現在の main とコンフリクトしています。main を取り込んで解消してください。（自動チェック: conflict-check）"
+            if [ -n "$existing" ]; then
+              gh api -X PATCH "repos/$REPO/issues/comments/$existing" -f body="$body" >/dev/null
+            else
+              gh pr comment "$PR" --repo "$REPO" --body "$body"
+            fi
+            echo "::error::PR #$PR conflicts with main"
+            exit 1
+          fi
+          gh pr edit "$PR" --repo "$REPO" --remove-label conflict 2>/dev/null || true
+          if [ -n "$existing" ]; then
+            gh api -X DELETE "repos/$REPO/issues/comments/$existing" || true
+          fi
+
+      - name: Re-check all open PRs after main moved
+        if: github.event_name != 'pull_request_target'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+        run: |
+          set -uo pipefail
+          marker="<!-- conflict-check -->"
+          for PR in $(gh api "repos/$REPO/pulls?state=open" --jq '.[].number'); do
+            mergeable=""
+            for i in 1 2 3 4 5 6; do
+              mergeable=$(gh api "repos/$REPO/pulls/$PR" --jq '.mergeable')
+              [ "$mergeable" != "null" ] && break
+              sleep 5
+            done
+            existing=$(gh api "repos/$REPO/issues/$PR/comments" --paginate \
+              --jq "[.[] | select(.user.login==\"github-actions[bot]\" and (.body | contains(\"$marker\")))] | .[0].id // empty")
+            if [ "$mergeable" = "false" ]; then
+              gh pr edit "$PR" --repo "$REPO" --add-label conflict || true
+              body="$marker
+          ⚠️ **コンフリクト検知**: このPRは現在の main とコンフリクトしています。main を取り込んで解消してください。（自動チェック: conflict-check）"
+              if [ -n "$existing" ]; then
+                gh api -X PATCH "repos/$REPO/issues/comments/$existing" -f body="$body" >/dev/null
+              else
+                gh pr comment "$PR" --repo "$REPO" --body "$body"
+              fi
+            else
+              gh pr edit "$PR" --repo "$REPO" --remove-label conflict 2>/dev/null || true
+              if [ -n "$existing" ]; then
+                gh api -X DELETE "repos/$REPO/issues/comments/$existing" || true
+              fi
+            fi
+          done

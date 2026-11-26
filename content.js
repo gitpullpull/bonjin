@@ -7,9 +7,9 @@
 window.SITE = {
 
   meta: {
-    title: "THE BONJIN — 凡人",
+    title: "THE BONJIN｜宮崎から、つくる。学生の開発集団",
     vol: "VOL. 0",
-    updated: "2026-11-17",
+    updated: "2026-11-25",
   },
 
   /* ヒーロー直下の数字（実データだけを大きく。
@@ -24,19 +24,161 @@ window.SITE = {
   /* 1語だけ入れ替わる文 */
   rotating: {
     before: "私たちは、",
-    words: ["ゲーム", "アプリ"],
+    words: ["ゲーム", "アプリ", "ホームページ", "名刺", "Tシャツ"],
     after: "を作っている。",
   },
 
   /* マーキーの中身（実データのみ、帯は1本だけ） */
   marquee: [
     "ゲームとアプリを作る学生の開発集団",
+    "ホームページ制作",
+    "名刺 × ホームページ",
+    "アプリ・システム開発",
+    "ゲーム開発",
+    "Tシャツ",
     "App Store 公開中 6本",
     "メンバー 6人",
     "宮崎 — 東京",
     "VOL. 0",
     "THE BONJIN",
   ],
+
+
+  /* 2026-11-25 リデザイン：宮崎を主体に。ヒーロー・紹介・想い・団体概要 */
+  hero: {
+    place: "MIYAZAKI, JAPAN — 31.9°N 131.4°E",
+    copy: ["宮崎から、", "つくる。"],
+    sub: "宮崎の学生がつくる、ホームページ・アプリ・ゲーム・Tシャツ。",
+  },
+
+  intro: {
+    label: "About",
+    heading: ["宮崎で、", "凡人がつくる。"],
+    body: [
+      "ゲームとアプリを作る、宮崎の学生の開発集団です。",
+    ],
+  },
+
+  message: {
+    label: "Message",
+    heading: "凡人が、作り続ける。",
+    body: [
+      "特別な人間はいない。いるのは、作り続けている普通の人間だけ。",
+    ],
+  },
+
+  company: {
+    label: "Overview",
+    heading: "団体概要",
+    rows: [
+      ["名称", "THE BONJIN（ザ・ボンジン）"],
+      ["拠点", "宮崎県（宮崎大学）／東京"],
+      ["事業", "ホームページ制作／名刺 × ホームページ 同時開発／アプリ・システム開発／アプリ開発／ゲーム開発／Tシャツ事業"],
+      ["メンバー", "6人"],
+      ["対応エリア", "宮崎県を中心に（メールでのご相談は県外からも受け付けます）"],
+      ["連絡先", "itwoshiyou@gmail.com"],
+    ],
+  },
+
+  /* 仕事（事業）— 2026-11-24 追加。
+     example = 「こんな依頼に」（想定される依頼の例。実績ではない）
+     works   = 実績（実在するものだけ。[表示名, URL, 補足]） */
+  services: {
+    lead: "小さな依頼から、気軽にご相談ください。",
+    items: [
+      {
+        no: "01",
+        name: "ホームページ制作",
+        en: "WEBSITE",
+        status: "応相談",
+        body: "企画から公開まで、まるごと。",
+        points: ["企画と文章の整理", "デザイン", "実装（動きのある演出も）", "公開・独自ドメインの設定"],
+        examples: ["中小企業の会社紹介サイト", "店舗の、営業時間と地図が分かるページ"],
+        works: [
+          ["THE BONJIN 公式サイト（このサイト）", "https://bonjin.gitpullpull.me", "企画・デザイン・実装・WebGL作品"],
+          ["page.gitpullpull.me", "https://page.gitpullpull.me", "個人のリンク集"],
+        ],
+      },
+      {
+        no: "02",
+        name: "名刺 × ホームページ 同時開発",
+        en: "CARD + WEB",
+        status: "受付中",
+        body: "名刺とスマホページを、同じデザインで。",
+        lp: "web.html",
+        student: "student.html",
+        points: ["名刺のデザイン", "QRコードの作成", "スマホ用プロフィールページ", "名刺とページのデザインをそろえる"],
+        examples: ["就活・学会・ビジコン用の名刺と自己紹介ページ", "フリーランスの名刺と作品ページ", "店舗のショップカードとメニューページ"],
+        works: [
+          ["尾薗圭亮の名刺ページ", "https://itoshiyou.github.io/business-card/index.html", "名刺から開くプロフィール"],
+        ],
+      },
+      {
+        no: "03",
+        name: "アプリ・システム開発",
+        en: "SYSTEM",
+        status: "受付中",
+        body: "手作業の仕事を、AIで仕組みに。",
+        lp: "ai.html",
+        lpLabel: "中小企業のAI業務改善はこちら →",
+        points: ["業務の自動化", "LLM・画像生成の組み込み", "API・サーバーの構築", "学習・試験対策のシステム"],
+        examples: ["毎週の集計や画像作りを自動にするツール", "社内・部内向けの予約や管理の仕組み", "AIを使った問い合わせ対応や文章整理"],
+        works: [
+          ["LINEスタンプ生成パイプライン", null, "市場分析→画像生成→リサイズを5分で自動完結（Ollama × Draw Things × FastAPI）"],
+          ["骨学試験対策システム", null, "医学部の試験対策（制作中）"],
+          ["D-CoT（小型LLMの推論効率化）", "https://arxiv.org/abs/2602.21786", "gitpullpull／人工知能学会 全国大会優秀賞"],
+        ],
+      },
+      {
+        no: "04",
+        name: "アプリ開発",
+        en: "iPHONE APP",
+        status: "受付中",
+        body: "企画から App Store 公開まで。",
+        points: ["企画", "画面デザイン", "iPhoneアプリの実装", "App Store への申請・公開"],
+        examples: ["お店や団体のオリジナルアプリ", "授業・資格勉強のための学習アプリ", "趣味やコミュニティ向けの小さな道具"],
+        works: [
+          ["App Store 公開中 6本", "apps.html", "Focus Wave（環境音）／ハンダン（学習）ほか"],
+          ["肉眼解剖学本試験 (beta)", "https://plicy.net/User/76215", "医学生向けの試験対策"],
+        ],
+      },
+      {
+        no: "05",
+        name: "ゲーム開発",
+        en: "GAME",
+        status: "受付中",
+        body: "パズルからミニゲームまで。",
+        points: ["企画とステージ設計", "ドット絵・グラフィック", "iPhone向け・ブラウザ向け", "宣伝・イベント用のミニゲーム"],
+        examples: ["商品やイベントの宣伝用ミニゲーム", "学園祭・展示で遊べるブラウザゲーム", "教材として使える学習ゲーム"],
+        works: [
+          ["ロウソク行脚", "https://apps.apple.com/jp/app/id6822286730", "パズル・全6章150ステージ"],
+          ["光の窓割り", "https://apps.apple.com/jp/app/id6824348602", "パズル・全66面"],
+          ["つみあげ出前", "https://apps.apple.com/jp/app/id6829997215", "パズル・全8店"],
+          ["おもいで百貨店", "https://apps.apple.com/jp/app/id6829372905", "ドット絵の放置ゲーム"],
+          ["ブラウザゲーム（plicy）", "https://plicy.net/User/76215", "伊藤しよう"],
+        ],
+      },
+      {
+        no: "06",
+        name: "Tシャツ事業",
+        en: "T-SHIRT",
+        status: "準備中",
+        body: "オリジナルTシャツと、おそろい制作。",
+        points: ["THE BONJIN オリジナルTシャツの販売", "デザインの持ち込みにも、ゼロからの相談にも対応", "ロゴ・イラスト・手書き文字のデータ化", "枚数・色・サイズは相談して決める"],
+        examples: ["サークル・ゼミ・部活のおそろいTシャツ", "学園祭やイベントのスタッフTシャツ", "お店・団体のロゴ入りユニフォーム", "手書きのイラストや文字を、そのままTシャツに"],
+        works: [
+          ["THE BONJIN オリジナルTシャツ", null, "「凡人」の墨とロゴ。販売開始はこのページで告知します"],
+        ],
+      },
+    ],
+    flow: ["相談（無料）", "内容と見積もりの確認", "制作（途中で確認）", "公開・納品"],
+    contact: {
+      text: "内容が決まっていなくても大丈夫です。",
+      links: [
+        ["メール", "mailto:itwoshiyou@gmail.com", "itwoshiyou@gmail.com"],
+      ],
+    },
+  },
 
   /* メンバーについて（改定 v1 — 「母体」の語は使わない） */
   about: {
@@ -81,7 +223,7 @@ window.SITE = {
       facts: [
         ["研究", "D-CoT: Disciplined Chain-of-Thought（小型LLMの推論効率化）"],
         ["受賞", "人工知能学会 全国大会優秀賞（2026・単著）"],
-        ["連絡先", "gitpullpull@gmail.com"],
+        ["連絡先", "gitpull@muse.ai"],
       ],
       links: [
         ["受賞（学会公式）", "https://www.ai-gakkai.or.jp/about/award/jsai_award-conf/", "人工知能学会 受賞者ページ"],
@@ -166,7 +308,13 @@ window.SITE = {
     links: [
       ["旧サイト", "https://itoshiyou.github.io/thebonjin/"],
       ["GitHub (itoshiyou/thebonjin)", "https://github.com/itoshiyou/thebonjin"],
+      ["仕事の依頼・相談", "#services"],
+      ["AI業務改善（中小企業向け）", "ai.html"],
+      ["作品「九十度」", "art/02-kyujudo/index.html"],
+      ["作品「足跡」", "art/03-ashiato/index.html"],
+      ["作品「一滴」", "art/01-itteki/index.html"],
+      ["公式LINE（新作・お知らせ）", "https://line.me/R/ti/p/@629zrowt"],
     ],
-    colophon: "DESIGN: awesome-design-md / Zapier を土台に改変。書体: Archivo, Hiragino Sans, IBM Plex Mono。写真は使っていません。",
+    colophon: "宮崎でつくっています。書体: Shippori Mincho, Zen Kaku Gothic New, Cormorant Garamond。",
   },
 };

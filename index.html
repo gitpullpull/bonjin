@@ -3,161 +3,153 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>THE BONJIN — 凡人</title>
-<meta name="description" content="THE Bonjin 公式サイト（VOL.0）。ゲームとアプリを作る学生の開発集団。メンバー6人 — 尾薗圭亮、gitpullpull、伊藤しよう、生方、ほか。">
+<title>THE BONJIN｜宮崎から、つくる。学生の開発集団</title>
+<meta name="description" content="THE BONJIN — 宮崎を拠点に、ゲームとアプリを作る学生の開発集団。ホームページ制作、名刺とホームページの同時開発、アプリ・システム開発、アプリ開発、ゲーム開発、Tシャツ。メンバー6人 — 尾薗圭亮、gitpullpull、伊藤しよう、生方、ほか。">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="THE BONJIN">
+<meta property="og:title" content="THE BONJIN｜宮崎から、つくる。">
+<meta property="og:description" content="宮崎を拠点に、ゲームとアプリを作る学生の開発集団。ホームページ制作、名刺とホームページの同時開発、アプリ・システム開発、アプリ開発、ゲーム開発、Tシャツ。">
+<meta property="og:url" content="https://bonjin.gitpullpull.me/">
+<meta property="og:image" content="https://bonjin.gitpullpull.me/assets/poster2.png">
+<meta property="og:locale" content="ja_JP">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800;900&family=IBM+Plex+Mono:wght@400;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%23FFFEFB'/%3E%3Ccircle cx='8' cy='8' r='4' fill='%23FF4F00'/%3E%3C/svg%3E">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;1,400;1,500&family=Shippori+Mincho:wght@500;600;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%23F3ECDF'/%3E%3Ccircle cx='8' cy='8' r='4' fill='%238C5E3C'/%3E%3C/svg%3E">
 <link rel="stylesheet" href="style.css">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Organization", "name": "THE BONJIN", "url": "https://bonjin.gitpullpull.me/", "address": {"@type": "PostalAddress", "addressRegion": "宮崎県", "addressCountry": "JP"}, "areaServed": "宮崎県", "logo": "https://bonjin.gitpullpull.me/assets/logo.jpg", "description": "宮崎を拠点に、ゲームとアプリを作る学生の開発集団", "makesOffer": [{"@type": "Offer", "itemOffered": {"@type": "Service", "name": "ホームページ制作"}}, {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "名刺 × ホームページ 同時開発"}}, {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "アプリ・システム開発"}}, {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "アプリ開発"}}, {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "ゲーム開発"}}, {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Tシャツ事業"}}]}</script>
 </head>
-<body>
-<div class="grain" aria-hidden="true"></div>
-<div class="cursor-dot" aria-hidden="true"></div>
-<div class="cursor-ring" aria-hidden="true"><span class="cursor-label"></span></div>
+<body class="home">
 
-<h1 class="vh">THE BONJIN — 凡人</h1>
 
-<!-- 背景の作品「九十度」：ページ全体の背景。スクロールが墨を回す（正面=凡人、真横=途中） -->
+<header class="site-head">
+  <div class="wrap head-in">
+    <a class="logo" href="#top">THE BONJIN</a>
+    <nav class="gnav" aria-label="メインメニュー">
+      <a href="#about">宮崎で</a>
+      <a href="#services">事業内容</a>
+      <a href="#message">想い</a>
+      <a href="#members">メンバー</a>
+      <a href="#products">実績</a>
+      <a class="nav-cta" href="#contact">お問い合わせ</a>
+    </nav>
+  </div>
+</header>
+
+<!-- 背景の作品「九十度」：スクロールで墨が回る（正面＝凡人、真横＝THE Bonjin） -->
 <div class="bg" aria-hidden="true">
-  <iframe id="bg-frame" src="art/02-kyujudo/index.html?bg=1" title="九十度" tabindex="-1"></iframe>
+  <iframe id="bg-frame" src="art/02-kyujudo/index.html?bg=1&amp;tone=sepia" title="九十度" tabindex="-1"></iframe>
   <video id="bg-video" src="assets/ink-loop-v2.mp4" poster="assets/poster2.png" autoplay muted loop playsinline hidden></video>
 </div>
 
-<!-- ロゴ：隅の印（読み込み時に一度だけ描かれる） -->
-<a class="corner-logo" href="#top" aria-label="THE BONJIN — トップへ戻る">
-  <video src="assets/logo-anim.mp4" poster="assets/logo.jpg" autoplay muted playsinline></video>
-</a>
-
-<!-- 一面目：作品そのもの -->
 <section class="cover" id="top">
-  <p class="cover-hint mono">まわす ／ 打つ ／ スクロール</p>
-</section>
-
-<!-- 状態帯：実データ（MOT式）。作品の直下から sticky -->
-<div class="statusbar">
-  <div class="wrap">
-    <span id="status-left">THE BONJIN — ゲームとアプリを作る学生の開発集団</span>
-    <span><span class="hot">App Store 公開中 6本</span>
-    &nbsp;<button id="cmdk-open" type="button">⌘K で探す</button></span>
+  <div class="cover-copy">
+    <p class="cover-place en" id="hero-place"></p>
+    <h1 class="cover-title" id="hero-copy">宮崎から、つくる。</h1>
   </div>
-</div>
-
-<div class="wrap veil">
-  <nav class="top">
-    <a class="logo" href="#top">THE BONJIN<span class="dot">.</span></a>
-    <ul>
-      <li><a href="#about">について</a></li>
-      <li><a href="#members">メンバー</a></li>
-      <li><a href="#products">目録</a></li>
-      <li><a href="apps.html">アプリ</a></li>
-    </ul>
-  </nav>
-
-  <header class="hero">
-    <p class="hero-fig mono">FIG_000 — THE BONJIN, <span id="vol"></span> / EST. 2026, MIYAZAKI–TOKYO</p>
-    <p class="hero-rot" id="hero-rot"></p>
-    <p class="hero-lead">特別な人間はいない。いるのは、作り続けている普通の人間だけです。THE Bonjinは、ゲームとアプリを作る学生の開発集団です。凡人が作る、未来への冒険（2026）。</p>
-    <div class="hero-actions">
-      <a class="btn btn-primary" href="apps.html" data-cursor="アプリ">アプリを見る</a>
-      <a class="btn btn-ghost" href="#members" data-cursor="メンバー">メンバーを見る</a>
-    </div>
-    <div class="stats" id="stats"></div>
-  </header>
-</div>
-
-<div class="marquee" aria-hidden="true"><div class="marquee-track" id="marquee-track"></div></div>
-
-<div class="wrap veil">
-
-  <section id="about">
-    <div class="sec-head">
-      <span class="sec-fig">FIG_001</span><h2>メンバーについて</h2>
-      <span class="sec-note">ABOUT THE MEMBERS</span>
-    </div>
-    <div class="body-text" id="about-body"></div>
-  </section>
-
-  <section id="members">
-    <div class="sec-head">
-      <span class="sec-fig">FIG_002</span><h2>メンバー</h2>
-      <span class="sec-note">写真は載せない。やったことで並ぶ。／ 行を押すと詳細</span>
-    </div>
-    <div class="ledger" id="ledger"></div>
-  </section>
-
-  <section id="products">
-    <div class="sec-head">
-      <span class="sec-fig">FIG_003</span><h2>目録</h2>
-      <span class="sec-note">作ったもの、作っているもの。状態だけを正確に書く。</span>
-    </div>
-    <div id="products-list"></div>
-    <p class="apps-banner"><a href="apps.html">尾薗圭亮のアプリ — App Store公開中の6本と、各アプリの具体的な内容 →</a></p>
-  </section>
-
-</div>
-
-<!-- 作品「足跡」：凡人は、歩いてきた人々でできている -->
-<section class="stage" aria-label="足跡 — 小さな人の群れでできた凡人">
-  <iframe src="art/03-ashiato/index.html" title="足跡" loading="lazy"></iframe>
+  <p class="cover-hint en">drag ／ tap ／ scroll</p>
 </section>
 
-<!-- 締めの作品「一滴」：水の中の墨が凝り、橙の一滴で壊れる -->
-<section class="stage" aria-label="一滴 — 水の中の墨">
-  <iframe id="itteki-frame" src="art/01-itteki/index.html" title="一滴" loading="lazy"></iframe>
-  <img id="itteki-fallback" class="stage-fallback" src="assets/poster2.png" alt="墨が水の中で凡人に凝る瞬間（インク空間）" hidden>
-</section>
+<main>
+  <section id="about" class="block">
+    <div class="wrap two">
+      <div class="sec-title">
+        <p class="label en" id="intro-label"></p>
+        <h2 id="intro-heading"></h2>
+      </div>
+      <div class="sec-body">
+        <div class="prose" id="intro-body"></div>
+        <div class="stats" id="stats"></div>
+      </div>
+    </div>
+  </section>
 
-<footer>
+  <section id="services" class="block tint">
+    <div class="wrap">
+      <div class="sec-title center">
+        <p class="label en">Business</p>
+        <h2>6つの事業</h2>
+      </div>
+      <div class="svc-list" id="svc-list"></div>
+    </div>
+  </section>
+
+  <section id="message" class="block dark">
+    <div class="wrap narrow center">
+      <p class="label en" id="msg-label"></p>
+      <h2 class="msg-heading" id="msg-heading"></h2>
+      <div class="prose" id="msg-body"></div>
+    </div>
+  </section>
+
+  <section id="members" class="block">
+    <div class="wrap two">
+      <div class="sec-title">
+        <p class="label en">Members</p>
+        <h2>メンバー</h2>
+        <p class="sec-note">名前を押すと詳細が開きます。</p>
+      </div>
+      <div class="sec-body">
+        <div class="ledger" id="ledger"></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="products" class="block tint">
+    <div class="wrap two">
+      <div class="sec-title">
+        <p class="label en">Works</p>
+        <h2>実績・目録</h2>
+        
+      </div>
+      <div class="sec-body">
+        <div id="products-list"></div>
+        <p class="more"><a href="apps.html">App Store の6本を見る →</a></p>
+      </div>
+    </div>
+  </section>
+
+  <section id="company" class="block">
+    <div class="wrap two">
+      <div class="sec-title">
+        <p class="label en" id="co-label"></p>
+        <h2 id="co-heading"></h2>
+      </div>
+      <div class="sec-body">
+        <dl class="table" id="co-table"></dl>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact" class="block tint">
+    <div class="wrap narrow center">
+      <p class="label en">Contact</p>
+      <h2>気軽にご相談ください。</h2>
+      <div class="svc-contact" id="svc-contact"></div>
+      <ol class="svc-flow" id="svc-flow"></ol>
+    </div>
+  </section>
+</main>
+
+<footer class="site-foot">
   <div class="wrap">
-    <div class="f-grid">
-      <div>
-        <div class="f-logo">THE BONJIN<span class="dot">.</span></div>
-      </div>
-      <div>
-        <h4>CREDITS — 奥付</h4>
-        <ul id="f-credits"></ul>
-      </div>
-      <div>
-        <h4>LINKS</h4>
-        <ul id="f-links"></ul>
-      </div>
+    <p class="f-logo">THE BONJIN</p>
+    <p class="f-tag">宮崎から、つくる。</p>
+    <div class="f-cols">
+      <ul id="f-credits"></ul>
+      <ul id="f-links"></ul>
     </div>
     <div class="colophon">
       <span>© 2026 THE BONJIN</span>
       <span id="f-colophon"></span>
-      <span class="mono" id="f-vol"></span>
+      <span id="f-vol"></span>
     </div>
   </div>
 </footer>
 
-<!-- ⌘K palette -->
-<div class="palette-backdrop" id="palette-backdrop" role="dialog" aria-modal="true" aria-label="サイト内検索">
-  <div class="palette">
-    <input id="palette-input" type="text" placeholder="メンバー、作品… を探す" autocomplete="off">
-    <ul id="palette-list"></ul>
-  </div>
-</div>
-
-<script>
-/* 作品の受け皿：WebGL2が無い／動きを減らす設定なら、冒頭はインク動画に差し替える */
-(function () {
-  var gl2 = false;
-  try { gl2 = !!document.createElement("canvas").getContext("webgl2"); } catch (e) {}
-  var calm = !!(window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches);
-  if (!gl2 || calm) {
-    var f = document.getElementById("bg-frame"), v = document.getElementById("bg-video");
-    if (f && v) { f.hidden = true; v.hidden = false; if (calm) { v.removeAttribute("autoplay"); } }
-  }
-  if (!gl2) {
-    var i2 = document.getElementById("itteki-frame"), im = document.getElementById("itteki-fallback");
-    if (i2 && im) { i2.hidden = true; im.hidden = false; }
-  }
-})();
-</script>
 <script src="content.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
 <script src="main.js"></script>
+<script src="bg.js"></script>
 </body>
 </html>

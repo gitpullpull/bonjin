@@ -5,23 +5,30 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>アプリ — THE BONJIN</title>
 <meta name="description" content="尾薗圭亮（KEITO OZONO）がApp Storeで公開中のアプリ全6本。ロウソク行脚、光の窓割り、Focus Wave、おもいで百貨店、ハンダン、つみあげ出前。">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="THE BONJIN">
+<meta property="og:title" content="アプリ — THE BONJIN">
+<meta property="og:description" content="尾薗圭亮がApp Storeで公開中のアプリ全6本。ロウソク行脚、光の窓割り、Focus Wave、おもいで百貨店、ハンダン、つみあげ出前。">
+<meta property="og:url" content="https://bonjin.gitpullpull.me/apps">
+<meta property="og:image" content="https://bonjin.gitpullpull.me/assets/poster2.png">
+<meta property="og:locale" content="ja_JP">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="assets/logo.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800;900&family=IBM+Plex+Mono:wght@400;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;1,400;1,500&family=Shippori+Mincho:wght@500;600;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 </head>
-<body>
-<div class="grain" aria-hidden="true"></div>
-
-<a class="corner-logo" href="index.html#top" aria-label="THE BONJIN — トップへ戻る">
-  <video src="assets/logo-anim.mp4" poster="assets/logo.jpg" autoplay muted playsinline></video>
-</a>
-
+<body class="sub">
+<div class="bg" aria-hidden="true">
+  <iframe id="bg-frame" src="art/02-kyujudo/index.html?bg=1&amp;tone=sepia" title="九十度" tabindex="-1"></iframe>
+  <video id="bg-video" src="assets/ink-loop-v2.mp4" poster="assets/poster2.png" autoplay muted loop playsinline hidden></video>
+</div>
 <div class="wrap subpage">
   <nav class="top">
-    <a class="logo" href="index.html">THE BONJIN<span class="dot">.</span></a>
+    <a class="logo" href="index.html">THE BONJIN</a>
     <ul>
+      <li><a href="index.html#services">仕事</a></li>
       <li><a href="index.html#members">メンバー</a></li>
       <li><a href="index.html#products">目録</a></li>
       <li><a href="index.html">トップ</a></li>
@@ -30,7 +37,7 @@
 
   <section>
     <div class="sec-head">
-      <span class="sec-fig">FIG_007</span><h2>アプリ</h2>
+      <span class="sec-fig">Apps</span><h2>アプリ</h2>
       <span class="sec-note">APPS BY KEITO OZONO — App Store公開中、全6本・すべて無料</span>
     </div>
     <p class="cat-lead">尾薗圭亮の作ったiPhoneアプリ、全6本。2026年10月に3本、11月に3本。すべて無料、すべて一人で制作。各アプリの具体的な内容は、ストア掲載文をそのまま載せている。</p>
@@ -208,6 +215,7 @@
     <div class="cat-foot">
       <p>開発者ページ（全アプリ）: <a href="https://apps.apple.com/jp/developer/keito-ozono/id6821842041" target="_blank" rel="noopener">KEITO OZONO — App Store</a></p>
       <p>ブラウザゲームは plicy でも公開中: <a href="https://plicy.net/User/76215" target="_blank" rel="noopener">伊藤しよう — plicy</a>（肉眼解剖学本試験 beta、骨学試験、ハロウィンからの脱出 ほか）</p>
+      <p>アプリやゲームの制作を依頼したい方へ: <a href="index.html#svc-04">アプリ開発</a> ／ <a href="index.html#svc-05">ゲーム開発</a> の仕事の説明 →</p>
       <p><a href="members/ozono.html">尾薗圭亮の紹介ページ →</a> ／ <a href="index.html#products">目録に戻る →</a></p>
     </div>
   </section>
@@ -221,5 +229,6 @@
     </div>
   </div>
 </footer>
+<script src="bg.js"></script>
 </body>
 </html>

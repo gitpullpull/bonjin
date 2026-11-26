@@ -5,23 +5,30 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>尾薗圭亮 — THE BONJIN</title>
 <meta name="description" content="尾薗圭亮（OZONO KEITO）。宮崎大学医学部医学科。THE Bonjin — 運営・企画・制作。App Storeに自作アプリ6本を公開中。">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="THE BONJIN">
+<meta property="og:title" content="尾薗圭亮 — THE BONJIN">
+<meta property="og:description" content="宮崎大学医学部医学科。THE Bonjin — 運営・企画・制作。App Storeに自作アプリ6本を公開中。">
+<meta property="og:url" content="https://bonjin.gitpullpull.me/members/ozono">
+<meta property="og:image" content="https://bonjin.gitpullpull.me/assets/poster2.png">
+<meta property="og:locale" content="ja_JP">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="../assets/logo.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800;900&family=IBM+Plex+Mono:wght@400;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;1,400;1,500&family=Shippori+Mincho:wght@500;600;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../style.css">
 </head>
-<body>
-<div class="grain" aria-hidden="true"></div>
-
-<a class="corner-logo" href="../index.html#top" aria-label="THE BONJIN — トップへ戻る">
-  <video src="../assets/logo-anim.mp4" poster="../assets/logo.jpg" autoplay muted playsinline></video>
-</a>
-
+<body class="sub">
+<div class="bg" aria-hidden="true">
+  <iframe id="bg-frame" src="../art/02-kyujudo/index.html?bg=1&amp;tone=sepia" title="九十度" tabindex="-1"></iframe>
+  <video id="bg-video" src="../assets/ink-loop-v2.mp4" poster="../assets/poster2.png" autoplay muted loop playsinline hidden></video>
+</div>
 <div class="wrap subpage">
   <nav class="top">
-    <a class="logo" href="../index.html">THE BONJIN<span class="dot">.</span></a>
+    <a class="logo" href="../index.html">THE BONJIN</a>
     <ul>
+      <li><a href="../index.html#services">仕事</a></li>
       <li><a href="../index.html#members">メンバー</a></li>
       <li><a href="../apps.html">アプリ</a></li>
       <li><a href="../index.html">トップ</a></li>
@@ -41,7 +48,9 @@
       <li><span class="k">作ったもの</span><span>App Storeに6本公開中（下記）</span></li>
       <li><span class="k">経歴</span><span>高卒認定 → 電気通信大学 → 再受験 → 宮崎大学医学部医学科</span></li>
     </ul>
+  </section>
 
+  <section>
     <p class="m-h mono">作ったもの — 目録</p>
     <div class="m-catalog">
       <a href="../apps.html#rousoku"><span class="n">ロウソク行脚</span><span class="g mono">パズル ／ 2026-10-19</span></a>
@@ -51,7 +60,9 @@
       <a href="../apps.html#handan"><span class="n">ハンダン</span><span class="g mono">学習 ／ 2026-11-09</span></a>
       <a href="../apps.html#tsumiage"><span class="n">つみあげ出前</span><span class="g mono">パズル ／ 2026-11-09</span></a>
     </div>
+  </section>
 
+  <section>
     <p class="m-h mono">リンク — LINKS</p>
     <div class="m-links">
       <a href="https://x.com/itoushiyou" target="_blank" rel="noopener"><span>X</span><span class="v">@itoushiyou</span></a>
@@ -61,8 +72,8 @@
       <a href="https://itoshiyou.github.io/business-card/index.html" target="_blank" rel="noopener"><span>名刺ページ</span><span class="v">business-card</span></a>
       <a href="https://apps.apple.com/jp/developer/keito-ozono/id6821842041" target="_blank" rel="noopener"><span>App Store</span><span class="v">KEITO OZONO</span></a>
     </div>
-    <p class="m-back"><a href="../index.html#members">← メンバーに戻る</a></p>
   </section>
+  <p class="m-back"><a href="../index.html#members">← メンバーに戻る</a></p>
 </div>
 
 <footer>
@@ -73,5 +84,6 @@
     </div>
   </div>
 </footer>
+<script src="../bg.js"></script>
 </body>
 </html>
